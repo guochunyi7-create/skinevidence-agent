@@ -1,0 +1,42 @@
+# PPT 页面主题标签
+# 技术资料是英文的，中文提问无法直接命中，因此在入库时把中文主题注入每个切块的章节名。
+# 页号为 1-based 闭区间，对应《BIOCELLINE 电子皮肤汇总资料 202609更新.pptx》42 页结构。
+# 换新版本 PPT 时，只需按新目录调整这里的区间。
+
+version: 1
+labels:
+  - pages: [1, 3]
+    zh: 封面与目录
+    en: Cover and Contents
+
+  - pages: [4, 9]
+    zh: 皮肤电生理与创面愈合
+    en: Cutaneous Electrophysiology and Wound Healing
+
+  - pages: [10, 15]
+    zh: 经皮生物电促渗技术原理与安全性
+    en: Transdermal Bioelectric Permeation Enhancement Technology
+
+  - pages: [16, 21]
+    zh: 电子皮肤产品结构与拉曼渗透验证
+    en: Electronic Skin Structure and Raman Penetration Validation
+
+  - pages: [22, 32]
+    zh: 人体临床功效评价 抗衰 胶原 弹性 案例
+    en: Human Clinical Efficacy Evaluation
+
+  - pages: [33, 34]
+    zh: 未来研究方向与发明专利
+    en: Future Research and Patents
+
+  - pages: [35, 38]
+    zh: 安全与法规认证 重金属检测 欧盟 REACH SVHC
+    en: Safety and Regulatory Certifications
+
+  - pages: [39, 40]
+    zh: 中山大学附属第三医院合作研究
+    en: Collaboration with the Third Affiliated Hospital of Sun Yat-sen University
+
+  - pages: [41, 42]
+    zh: 产品实拍图与小程序
+    en: Product Photos and Mini-App

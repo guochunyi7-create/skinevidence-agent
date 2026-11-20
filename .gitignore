@@ -1,0 +1,31 @@
+# 真实密钥与本地数据
+.env
+.env.*
+!.env.example
+
+# 运行时访客历史与生成的配方/卡片产物（含用户对话，不入库）
+artifacts/
+outputs/
+
+# 索引产物（由入库脚本生成，不入库）
+data/index/*.jsonl
+
+# 原始手册 / 法规 / MSDS 原件体积大且含未上市配方，默认不提交；
+# 但术语表与页面标签是配置，必须入库
+data/knowledge/**/*.pdf
+data/knowledge/**/*.pptx
+data/knowledge/**/*.docx
+data/_demo_legacy/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 系统
+.DS_Store
+Thumbs.db

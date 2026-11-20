@@ -1,0 +1,120 @@
+# 化妆品配方研制 · 结构化原料库
+#
+# 用途：为「配方研制 Agent」提供可计算的选料数据——功能分类、功效标签、
+#       常规用量区间、相态、工艺、配伍禁忌与证据来源。
+#
+# 重要声明（必须随配方草案一并传达给用户）：
+#   use 三元组为 [下限%, 上限%, 常用值%]，取自公开配方实践与原料商通用建议，
+#   是行业经验参考值，不是法规限量，也不是可直接投产的生产指令。
+#   实际配方须结合具体原料规格、工艺条件、稳定性/安全性/功效评价，
+#   由研发与法规人员复核确认后方可使用。evidence=msds 表示该项目已收录该原料 MSDS，
+#   可在知识库中检索到原始安全资料；evidence=industry 表示仅有行业常规用法参考。
+#
+# 由配方/法规团队维护；新增原料按下方格式追加即可，引擎无需改动。
+
+version: 1
+
+disclaimer: >-
+  本配方草案由 AI 依据公开原料常规用法生成，用量为行业经验参考区间而非法规限值，
+  不构成可直接投产的生产配方。实际使用须结合原料规格、工艺、稳定性试验、
+  安全评估与功效评价，由研发及法规人员复核确认。
+
+categories:
+  base: 基底
+  humectant: 保湿剂
+  emollient: 润肤剂
+  emulsifier: 乳化剂
+  thickener: 增稠剂
+  preservative: 防腐剂
+  chelator: 螯合剂
+  ph: pH调节剂
+  active: 活性成分
+  soothing: 舒缓成分
+  surfactant: 表面活性剂
+  film: 成膜剂
+
+ingredients:
+  # ---- 基底 ----
+  - {zh: 水, en: Aqua, cas: "7732-18-5", cat: base, benefits: [溶剂, 基底], use: [0, 100, 0], phase: 水相, process: 主锅基底, compat: 通用, caveat: 用于补足至百分百, evidence: industry}
+
+  # ---- 保湿剂（水相）----
+  - {zh: 甘油, en: Glycerin, cas: "56-81-5", cat: humectant, benefits: [保湿, 溶剂], use: [2, 15, 5], phase: 水相, process: 水相加入可加热, compat: 通用, caveat: 高用量肤感偏黏腻, evidence: msds}
+  - {zh: 丁二醇, en: Butylene Glycol, cas: "107-88-0", cat: humectant, benefits: [保湿, 溶剂], use: [2, 10, 4], phase: 水相, process: 水相加入, compat: 通用, caveat: 兼具溶剂与保湿, evidence: msds}
+  - {zh: 戊二醇, en: Pentylene Glycol, cas: "5343-92-0", cat: humectant, benefits: [保湿, 防腐增效], use: [1, 5, 2], phase: 水相, process: 水相加入可加热, compat: 可减少对传统防腐依赖, caveat: 兼顾防腐增效, evidence: msds}
+  - {zh: 己二醇, en: Hexanediol, cas: "6920-22-5", cat: humectant, benefits: [保湿, 防腐增效], use: [0.5, 3, 1], phase: 水相, process: 水相加入, compat: 防腐体系协同, caveat: 兼顾防腐增效, evidence: msds}
+  - {zh: 海藻糖, en: Trehalose, cas: "6138-23-4", cat: humectant, benefits: [保湿, 修护], use: [0.5, 5, 2], phase: 水相, process: 水相加入, compat: 通用, caveat: 具细胞保护概念需功效佐证, evidence: msds}
+  - {zh: 透明质酸钠, en: Sodium Hyaluronate, cas: "9067-32-7", cat: humectant, benefits: [保湿, 成膜], use: [0.01, 0.5, 0.1], phase: 分散相, process: 撒入水相充分溶胀, compat: 与卡波姆同用注意搓泥, caveat: 需充分水化避免团块, evidence: msds}
+  - {zh: 泛醇, en: Panthenol, cas: "16485-10-2", cat: humectant, benefits: [保湿, 舒缓, 修护], use: [0.5, 5, 2], phase: 水相, process: 水相加入, compat: 通用, caveat: 依供应商规格, evidence: industry}
+  - {zh: 甜菜碱, en: Betaine, cas: "107-43-7", cat: humectant, benefits: [保湿, 舒缓], use: [1, 5, 2], phase: 水相, process: 水相加入, compat: 通用, caveat: 可降低体系刺激性, evidence: industry}
+  - {zh: 山梨醇, en: Sorbitol, cas: "50-70-4", cat: humectant, benefits: [保湿], use: [1, 10, 3], phase: 水相, process: 水相加入可加热, compat: 通用, caveat: 高用量有吸湿性, evidence: industry}
+  - {zh: 丙二醇, en: Propylene Glycol, cas: "57-55-6", cat: humectant, benefits: [保湿, 溶剂], use: [1, 10, 3], phase: 水相, process: 水相加入, compat: 通用, caveat: 部分人群存在耐受差异, evidence: industry}
+  - {zh: 乙基己基甘油, en: Ethylhexylglycerin, cas: "70445-33-9", cat: humectant, benefits: [保湿, 防腐增效], use: [0.1, 1, 0.3], phase: 水相, process: 后段低温加入, compat: 防腐体系协同, caveat: 依供应商规格, evidence: industry}
+  - {zh: 甘油聚醚-26, en: Glycereth-26, cas: "72057-28-6", cat: humectant, benefits: [保湿, 溶剂], use: [1, 8, 3], phase: 水相, process: 水相加入, compat: 通用, caveat: 改善肤感, evidence: industry}
+
+  # ---- 润肤剂（油相）----
+  - {zh: 角鲨烷, en: Squalane, cas: "111-01-3", cat: emollient, benefits: [保湿, 修护, 柔润], use: [1, 20, 8], phase: 油相, process: 油相加热, compat: 通用, caveat: 氧化稳定性需关注, evidence: industry}
+  - {zh: 霍霍巴油, en: Jojoba Oil, cas: "61789-91-1", cat: emollient, benefits: [柔润, 修护], use: [1, 15, 5], phase: 油相, process: 油相加热, compat: 通用, caveat: 天然油脂批次差异, evidence: industry}
+  - {zh: 乳木果油, en: Shea Butter, cas: "91080-23-8", cat: emollient, benefits: [柔润, 修护], use: [1, 10, 3], phase: 油相, process: 油相加热熔化, compat: 通用, caveat: 高用量肤感厚重, evidence: industry}
+  - {zh: 辛酸癸酸甘油三酯, en: Caprylic/Capric Triglyceride, cas: "73398-61-5", cat: emollient, benefits: [柔润, 溶剂], use: [1, 20, 8], phase: 油相, process: 油相加入, compat: 通用, caveat: 轻质油脂, evidence: industry}
+  - {zh: 聚二甲基硅氧烷, en: Dimethicone, cas: "9016-00-6", cat: emollient, benefits: [柔润, 顺滑], use: [0.5, 10, 3], phase: 油相, process: 油相加入, compat: 通用, caveat: 硅油体系需评估诉求, evidence: industry}
+  - {zh: 鲸蜡硬脂醇, en: Cetearyl Alcohol, cas: "67762-27-0", cat: emollient, benefits: [柔润, 增稠, 乳化辅助], use: [1, 8, 3], phase: 油相, process: 油相加热熔化, compat: 与乳化剂配合, caveat: 属脂肪醇非表活, evidence: industry}
+  - {zh: 氢化聚异丁烯, en: Hydrogenated Polyisobutene, cas: "61693-08-3", cat: emollient, benefits: [柔润, 成膜], use: [1, 15, 5], phase: 油相, process: 油相加入, compat: 通用, caveat: 封闭性较强, evidence: industry}
+
+  # ---- 乳化剂 ----
+  - {zh: 鲸蜡硬脂醇橄榄油酸酯, en: Cetearyl Olivate and Sorbitan Olivate, cas: "0", cat: emulsifier, benefits: [乳化], use: [1, 5, 3], phase: 油相, process: 油相加热, compat: 植物来源乳化体系, caveat: 商品名 Olivem 1000, evidence: industry}
+  - {zh: 甘油硬脂酸酯, en: Glyceryl Stearate and PEG-100 Stearate, cas: "0", cat: emulsifier, benefits: [乳化], use: [1, 5, 2.5], phase: 油相, process: 油相加热, compat: 非离子体系配伍宽, caveat: 复配商品需核对INCI, evidence: industry}
+  - {zh: 聚山梨醇酯-60, en: Polysorbate 60, cas: "9005-67-8", cat: emulsifier, benefits: [乳化], use: [0.5, 3, 1.5], phase: 油相, process: 油相加入, compat: 非离子体系, caveat: HLB需匹配油相, evidence: industry}
+
+  # ---- 增稠剂 ----
+  - {zh: 卡波姆, en: Carbomer, cas: "9007-20-9", cat: thickener, benefits: [增稠, 悬浮], use: [0.05, 1, 0.2], phase: 分散相, process: 水相分散后中和, compat: 对电解质敏感, caveat: 需三乙醇胺中和至目标粘度, evidence: industry, avoid: [氯化钾]}
+  - {zh: 黄原胶, en: Xanthan Gum, cas: "11138-66-2", cat: thickener, benefits: [增稠, 悬浮], use: [0.05, 0.5, 0.15], phase: 分散相, process: 撒入水相分散, compat: 耐盐性较好, caveat: 过量易拉丝, evidence: industry}
+  - {zh: 卡拉胶, en: Carrageenan, cas: "9000-07-1", cat: thickener, benefits: [增稠, 成膜], use: [0.1, 1, 0.3], phase: 水相, process: 水相加热溶解, compat: 与电解质有一定作用, caveat: 注意钾离子影响凝胶, evidence: msds}
+  - {zh: 羟乙基纤维素, en: Hydroxyethylcellulose, cas: "9004-62-0", cat: thickener, benefits: [增稠], use: [0.1, 1, 0.3], phase: 分散相, process: 水相分散溶胀, compat: 非离子配伍宽, caveat: 注意水化时间, evidence: industry}
+  - {zh: 银耳多糖, en: Tremella Polysaccharide, cas: "0", cat: film, benefits: [成膜, 保湿, 增稠], use: [0.05, 0.5, 0.1], phase: 水相, process: 水相加入, compat: 通用, caveat: 依供应商规格, evidence: industry}
+
+  # ---- 防腐剂 ----
+  - {zh: 苯氧乙醇, en: Phenoxyethanol, cas: "122-99-6", cat: preservative, benefits: [防腐], use: [0.1, 1, 0.5], phase: 水相, process: 低温后段加入, compat: 常与多元醇协同, caveat: 法规上限百分之一须核对, evidence: industry}
+  - {zh: 羟基苯乙酮, en: Hydroxyacetophenone, cas: "99-93-4", cat: preservative, benefits: [防腐, 抗氧化], use: [0.1, 1, 0.5], phase: 水相, process: 水相加入, compat: 防腐增效体系, caveat: 商品名 SymSave H, evidence: msds}
+  - {zh: 山梨酸钾, en: Potassium Sorbate, cas: "24634-61-5", cat: preservative, benefits: [防腐], use: [0.05, 0.4, 0.15], phase: 水相, process: 水相加入, compat: 酸性体系效果佳, caveat: 需控制体系酸碱度, evidence: industry}
+  - {zh: 苯甲酸钠, en: Sodium Benzoate, cas: "532-32-1", cat: preservative, benefits: [防腐], use: [0.05, 0.5, 0.2], phase: 水相, process: 水相加入, compat: 酸性体系效果佳, caveat: 需控制体系酸碱度, evidence: industry}
+
+  # ---- 螯合与酸碱调节 ----
+  - {zh: EDTA二钠, en: Disodium EDTA, cas: "6381-92-6", cat: chelator, benefits: [螯合, 稳定], use: [0.01, 0.1, 0.05], phase: 水相, process: 水相加入, compat: 通用, caveat: 提升体系稳定性, evidence: industry}
+  - {zh: 柠檬酸, en: Citric Acid, cas: "77-92-9", cat: ph, benefits: [酸碱调节], use: [0.01, 0.3, 0.05], phase: 水相, process: 终段按需调节, compat: 通用, caveat: 按实测酸碱度酌情添加, evidence: industry}
+  - {zh: 柠檬酸钠, en: Sodium Citrate, cas: "68-04-2", cat: ph, benefits: [酸碱调节, 缓冲], use: [0.05, 0.3, 0.1], phase: 水相, process: 水相加入, compat: 与柠檬酸组成缓冲对, caveat: 用于稳定酸碱度, evidence: industry}
+  - {zh: 三乙醇胺, en: Triethanolamine, cas: "102-71-6", cat: ph, benefits: [酸碱调节, 中和], use: [0.05, 0.5, 0.1], phase: 水相, process: 终段中和卡波姆, compat: 卡波姆体系常用, caveat: 按实测酸碱度酌情添加, evidence: industry}
+
+  # ---- 活性成分 ----
+  - {zh: 玻色因, en: Pro-Xylane, cas: "439685-79-7", cat: active, benefits: [抗皱, 紧致, 修护], use: [1, 10, 3], phase: 水相, process: 水相低温加入, compat: 通用, caveat: 抗皱功效需评价依据, evidence: msds}
+  - {zh: 乙酰基六肽-8, en: Acetyl Hexapeptide-8, cas: "616204-22-9", cat: active, benefits: [抗皱, 紧致], use: [0.01, 5, 2], phase: 水相, process: 后段低温加入, compat: 通用, caveat: 按商品原料计活性物含量依供应商, evidence: msds}
+  - {zh: 烟酰胺, en: Niacinamide, cas: "98-92-0", cat: active, benefits: [提亮, 控油, 修护], use: [0.5, 10, 3], phase: 水相, process: 水相加入, compat: 注意酸碱度与耐受, caveat: 提亮宣称涉及特殊化妆品管理, evidence: industry, special: true}
+  - {zh: 视黄醇, en: Retinol, cas: "111-03-5", cat: active, benefits: [抗皱, 更新], use: [0.01, 1, 0.1], phase: 油相, process: 后段低温加入避光, compat: 避免与高浓度酸同用, caveat: 需稳定性与刺激性评价, evidence: industry}
+  - {zh: 3-O-乙基抗坏血酸, en: 3-O-Ethyl Ascorbic Acid, cas: "86404-04-8", cat: active, benefits: [提亮, 抗氧化], use: [0.5, 5, 2], phase: 水相, process: 水相低温加入, compat: 通用, caveat: 提亮宣称涉及特殊化妆品管理, evidence: industry, special: true}
+  - {zh: 抗坏血酸, en: Ascorbic Acid, cas: "50-81-7", cat: active, benefits: [提亮, 抗氧化], use: [0.5, 20, 5], phase: 水相, process: 低酸碱度水相, compat: 与多数增稠剂需配伍验证, caveat: 需低酸碱度体系且易氧化, evidence: industry, special: true}
+  - {zh: 传明酸, en: Tranexamic Acid, cas: "1197-18-8", cat: active, benefits: [提亮], use: [0.5, 5, 2], phase: 水相, process: 水相加入, compat: 通用, caveat: 美白祛斑宣称涉及特殊化妆品管理, evidence: industry, special: true}
+  - {zh: α-熊果苷, en: Alpha-Arbutin, cas: "84380-01-8", cat: active, benefits: [提亮], use: [0.1, 2, 0.5], phase: 水相, process: 后段低温加入, compat: 注意酸碱度, caveat: 美白祛斑宣称涉及特殊化妆品管理, evidence: industry, special: true}
+  - {zh: 神经酰胺NP, en: Ceramide NP, cas: "100403-19-8", cat: active, benefits: [修护, 屏障], use: [0.01, 0.5, 0.1], phase: 油相, process: 油相加热溶解, compat: 与胆固醇脂肪酸搭配, caveat: 需合适载体, evidence: industry}
+  - {zh: 咖啡因, en: Caffeine, cas: "58-08-2", cat: active, benefits: [紧致, 抗氧化], use: [0.1, 1, 0.5], phase: 水相, process: 水相加热溶解, compat: 通用, caveat: 依供应商规格, evidence: industry}
+  - {zh: 生育酚, en: Tocopherol, cas: "59-02-9", cat: active, benefits: [抗氧化, 修护], use: [0.05, 0.5, 0.2], phase: 油相, process: 油相加入, compat: 可保护油相, caveat: 高浓度可能变色, evidence: industry}
+  - {zh: 辅酶Q10, en: Ubiquinone, cas: "303-98-0", cat: active, benefits: [抗氧化, 抗皱], use: [0.01, 0.5, 0.1], phase: 油相, process: 油相加入, compat: 通用, caveat: 依供应商规格, evidence: industry}
+  - {zh: 虾青素, en: Astaxanthin, cas: "472-61-7", cat: active, benefits: [抗氧化], use: [0.001, 0.1, 0.01], phase: 油相, process: 避光低温加入, compat: 需避光体系, caveat: 易降解需稳定性验证, evidence: industry}
+  - {zh: 氯化钾, en: Potassium Chloride, cas: "7447-40-7", cat: active, benefits: [促渗, 电解质], use: [0.1, 2, 0.5], phase: 水相, process: 水相加入, compat: 与卡波姆存在配伍冲突, caveat: 离子导入体系组分, evidence: msds, avoid: [卡波姆]}
+
+  # ---- 舒缓成分 ----
+  - {zh: 积雪草提取物, en: Centella Asiatica Extract, cas: "0", cat: soothing, benefits: [舒缓, 修护], use: [0.1, 5, 1], phase: 水相, process: 水相加入, compat: 通用, caveat: 植物提取物批次差异, evidence: industry}
+  - {zh: 马齿苋提取物, en: Portulaca Oleracea Extract, cas: "0", cat: soothing, benefits: [舒缓, 保湿], use: [0.5, 5, 2], phase: 水相, process: 水相加入, compat: 通用, caveat: 植物提取物批次差异, evidence: industry}
+  - {zh: 绿茶提取物, en: Camellia Sinensis Leaf Extract, cas: "84650-60-2", cat: soothing, benefits: [抗氧化, 舒缓], use: [0.1, 3, 0.5], phase: 水相, process: 水相加入, compat: 通用, caveat: 植物提取物批次差异与颜色影响, evidence: industry}
+  - {zh: 甘草提取物, en: Glycyrrhiza Uralensis Extract, cas: "0", cat: soothing, benefits: [舒缓, 提亮], use: [0.1, 3, 0.5], phase: 水相, process: 水相加入, compat: 通用, caveat: 植物提取物批次差异, evidence: industry}
+  - {zh: 红没药醇, en: Bisabolol, cas: "515-69-5", cat: soothing, benefits: [舒缓], use: [0.05, 0.5, 0.2], phase: 油相, process: 油相加入, compat: 通用, caveat: 依供应商规格, evidence: industry}
+  - {zh: 尿囊素, en: Allantoin, cas: "97-59-6", cat: soothing, benefits: [舒缓, 修护], use: [0.1, 0.5, 0.2], phase: 水相, process: 水相加热溶解, compat: 通用, caveat: 注意溶解度, evidence: industry}
+  - {zh: 甘草酸二钾, en: Dipotassium Glycyrrhizate, cas: "68797-35-3", cat: soothing, benefits: [舒缓], use: [0.05, 0.5, 0.1], phase: 水相, process: 水相加入, compat: 通用, caveat: 依供应商规格, evidence: industry}
+  - {zh: β-葡聚糖, en: Beta-Glucan, cas: "0", cat: soothing, benefits: [舒缓, 修护, 成膜], use: [0.05, 0.5, 0.1], phase: 水相, process: 水相加入, compat: 通用, caveat: 依供应商规格, evidence: industry}
+  - {zh: 雪莲提取物, en: Saussurea Involucrata Extract, cas: "0", cat: soothing, benefits: [舒缓, 抗氧化], use: [0.5, 5, 2], phase: 水相, process: 水相加入, compat: 通用, caveat: 植物来源无单一CAS, evidence: msds}
+  - {zh: 槲皮素肌肽包裹物, en: Nano-Qtcane, cas: "0", cat: active, benefits: [抗氧化], use: [0.5, 5, 2], phase: 水相, process: 后段加入, compat: 通用, caveat: 组分见原MSDS附录, evidence: msds}
+  - {zh: pNRF2-P肽, en: pNRF2-P, cas: "0", cat: active, benefits: [抗氧化, 修护], use: [0.1, 3, 1], phase: 水相, process: 后段低温加入, compat: 通用, caveat: 原料代号组分见MSDS, evidence: msds}
+
+  # ---- 清洁表活 ----
+  - {zh: 椰油酰谷氨酸钠, en: Sodium Cocoyl Glutamate, cas: "68187-32-6", cat: surfactant, benefits: [清洁, 温和], use: [5, 20, 10], phase: 水相, process: 水相加热溶解, compat: 氨基酸表活体系, caveat: 注意体系酸碱度, evidence: industry}
+  - {zh: 月桂酰谷氨酸钠, en: Sodium Lauroyl Glutamate, cas: "29923-31-7", cat: surfactant, benefits: [清洁, 温和], use: [5, 20, 10], phase: 水相, process: 水相加热溶解, compat: 氨基酸表活体系, caveat: 注意体系酸碱度, evidence: industry}
+  - {zh: 癸基葡糖苷, en: Decyl Glucoside, cas: "68515-73-1", cat: surfactant, benefits: [清洁, 温和], use: [3, 15, 7], phase: 水相, process: 水相加入, compat: 非离子表活, caveat: 泡沫与黏度需调配, evidence: industry}
+  - {zh: 椰油酰胺丙基甜菜碱, en: Cocamidopropyl Betaine, cas: "61789-40-0", cat: surfactant, benefits: [清洁, 增泡, 温和], use: [2, 10, 5], phase: 水相, process: 水相加入, compat: 两性表活配伍宽, caveat: 依供应商规格, evidence: industry}

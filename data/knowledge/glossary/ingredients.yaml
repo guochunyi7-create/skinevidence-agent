@@ -1,0 +1,239 @@
+# 中英成分术语表
+# 用途一：查询扩展 —— 中文提问（"甘油安全吗"）补上英文名（Glycerine）再检索英文 MSDS
+# 用途二：入库注入 —— 把中文名写进该原料所有切块的表头，让中文查询能字面命中
+#
+# CAS 号仅作检索辅助；对外表述与备案核对一律以官方文件和厂家 MSDS 原件为准。
+# 由配方/法规团队维护，新增原料只需在此追加一条。
+
+version: 1
+
+ingredients:
+  - zh: 甘油
+    aliases: [甘油, 丙三醇]
+    en: [Glycerine, Glycerin, Glycerol]
+    cas: "56-81-5"
+    function: 保湿剂、溶剂
+    file_hint: Glycerine
+
+  - zh: 丁二醇
+    aliases: ["丁二醇", "1,3-丁二醇"]
+    en: ["1,3-Butylene Glycol", "Butylene Glycol", "1,3-BG"]
+    cas: "107-88-0"
+    function: 保湿剂、溶剂
+    file_hint: Butylene Glycol
+
+  - zh: 戊二醇
+    aliases: ["戊二醇", "1,2-戊二醇"]
+    en: ["1,2-Pentanediol", "Pentylene Glycol"]
+    cas: "5343-92-0"
+    function: 保湿剂、防腐增效
+    file_hint: Pentanediol
+
+  - zh: 己二醇
+    aliases: ["己二醇", "1,2-己二醇"]
+    en: ["1,2-Hexanediol", "Hexanediol"]
+    cas: "6920-22-5"
+    function: 保湿剂、防腐增效
+    file_hint: Hexanediol
+
+  - zh: 卡拉胶
+    aliases: [卡拉胶, 角叉菜胶]
+    en: [Carrageenan, GLYCAN CHCR]
+    cas: "9000-07-1"
+    function: 增稠剂、成膜剂
+    file_hint: Carrageenan
+
+  - zh: 海藻糖
+    aliases: [海藻糖]
+    en: [Trehalose, GLYCAN TH]
+    cas: "6138-23-4"
+    function: 保湿剂、保护剂
+    file_hint: Trehalose
+
+  - zh: 透明质酸钠
+    aliases: [透明质酸钠, 玻尿酸, 透明质酸]
+    en: ["Sodium Hyaluronate", "Hyaluronic Acid"]
+    cas: "9067-32-7"
+    function: 保湿剂
+    file_hint: Sodium Hyaluronate
+
+  - zh: 玻色因
+    aliases: [玻色因, 羟丙基四氢吡喃三醇]
+    en: [Pro-xylane, Hydroxypropyl Tetrahydropyrantriol]
+    cas: "439685-79-7"
+    function: 抗皱、促进糖胺聚糖合成（功效需评价依据）
+    file_hint: Pro-xylane
+
+  - zh: 乙酰基六肽-8
+    aliases: [乙酰基六肽-8, 六肽, 阿基瑞林]
+    en: [Argireline, Acetyl Hexapeptide-8]
+    cas: "616204-22-9"
+    function: 抗皱、紧致（功效需评价依据）
+    file_hint: Argireline
+
+  - zh: 氯化钾
+    aliases: [氯化钾]
+    en: [Potassium Chloride, KCl]
+    cas: "7447-40-7"
+    function: 电解质、离子导入体系组分
+    file_hint: Potassium Chloride
+
+  - zh: 羟基苯乙酮
+    aliases: ["羟基苯乙酮", "对羟基苯乙酮", "SymSave H", "复配防腐剂", "防腐体系"]
+    en: ["Hydroxyacetophenone", "SymSave H", "4'-Hydroxyacetophenone"]
+    cas: "99-93-4"
+    function: 防腐增效剂、抗氧化（商品名 SymSave H，SDS 含 67 页暴露场景附录）
+    file_hint: SymSave
+
+  - zh: 雪莲提取物
+    aliases: ["雪莲", "天山雪莲", "雪莲提取物", "水溶性雪莲提取物"]
+    en: ["Saussurea Involucrata Extract", "Tianshan Xuelian", "Water-soluble Saussurea Involucrata Extract"]
+    cas: ""
+    function: 抗氧化、舒缓（植物来源原料，无单一 CAS）
+    file_hint: Tianshan Xuelian
+
+  - zh: 槲皮素-肌肽包裹物
+    aliases: ["槲皮素", "肌肽", "纳米槲皮素", "Nano-Qtcane"]
+    en: ["Nano-Qtcane", "Quercetin", "Carnosine"]
+    cas: ""
+    function: 抗氧化（双效包裹原料，组分表见该文件中文附录）
+    file_hint: Nano-Qtca
+
+  - zh: pNRF2-P 肽
+    aliases: [pNRF2, Nrf2, NRF2-P]
+    en: [pNRF2-P]
+    cas: ""
+    function: 抗氧化通路调节肽（原料代号，具体组分见 MSDS）
+    file_hint: pNRF2
+
+# MSDS / 法规常用属性词：中文提问里出现这些词，扩展成英文，才能命中英文章节标题
+attributes:
+  - zh: 分子量
+    en: ["Molecular Weight"]
+  - zh: 沸点
+    en: ["Boiling Point"]
+  - zh: 闪点
+    en: ["Flash Point"]
+  - zh: 熔点
+    en: ["Melting Point"]
+  - zh: 密度
+    en: ["Density"]
+  - zh: 溶解性
+    en: ["Solubility"]
+  - zh: 外观
+    en: ["Appearance"]
+  - zh: 毒理
+    en: ["Toxicological"]
+  - zh: 毒性
+    en: ["Toxicological", "Toxicity"]
+  - zh: 危害
+    en: ["Hazards"]
+  - zh: 急救
+    en: ["First Aid"]
+  - zh: 消防
+    en: ["Fire Fighting"]
+  - zh: 泄漏
+    en: ["Accidental Release"]
+  - zh: 储存
+    en: ["Handling and Storage"]
+  - zh: 运输
+    en: ["Transport"]
+  - zh: 稳定性
+    en: ["Stability and Reactivity"]
+  - zh: 生态
+    en: ["Ecological"]
+  - zh: 废弃
+    en: ["Disposal"]
+  - zh: 法规
+    en: ["Regulatory"]
+  - zh: 组成
+    en: ["Composition"]
+  - zh: 成分
+    en: ["Composition", "Ingredients"]
+  - zh: 暴露
+    en: ["Exposure Controls"]
+  - zh: 防护
+    en: ["Personal Protection"]
+  - zh: 标识
+    en: ["Identification"]
+
+# 领域词表：用于判断提问是否落在本知识库范围内。命中则正常回答，未命中且置信度低就转人工，
+# 避免"公司营收多少"这类问题被强行用法规条文糊弄过去。
+  # 法规与原料资料里的高频属性说法，缺了这些中文问法会落到噪声行
+  - zh: 限值
+    en: ["Limit", "Limits", "Limit Value"]
+  - zh: 限量
+    en: ["Limit", "Limits", "Limit Value"]
+  - zh: 上限
+    en: ["Limit", "Maximum"]
+  - zh: 用途
+    en: ["Recommended Use", "Uses", "Application"]
+  - zh: 作用
+    en: ["Recommended Use", "Function", "Application"]
+  - zh: 功效
+    en: ["Efficacy", "Function"]
+  - zh: 别名
+    en: ["Synonyms"]
+  - zh: 化学名称
+    en: ["Chemical Name"]
+  - zh: 分子式
+    en: ["Molecular Formula"]
+
+  # 法规与原料资料里的高频属性说法（中英双向），缺了这些中文问法会落到噪声行
+  - zh: 限值
+    en: ["Limit", "Limits", "Limit Value"]
+  - zh: 限量
+    en: ["Limit", "Limits", "Limit Value"]
+  - zh: 上限
+    en: ["Limit", "Maximum"]
+  - zh: 用途
+    en: ["Recommended Use", "Uses", "Application"]
+  - zh: 作用
+    en: ["Recommended Use", "Function", "Application"]
+  - zh: 功效
+    en: ["Efficacy", "Function"]
+  - zh: 别名
+    en: ["Synonyms"]
+  - zh: 化学名称
+    en: ["Chemical Name"]
+  - zh: 分子式
+    en: ["Molecular Formula"]
+  - zh: 生产商
+    en: ["Company", "Manufacturer"]
+
+
+# 受限制物质（多为单字）：问「铅的限量」时，"铅"必须出现在答案出处里，
+# 否则会返回一段讲"限量"却不提铅的通用条文
+substances: ["铅", "砷", "汞", "镉", "锑", "镍", "硒", "硼", "钡", "锶", "铬", "铊", "甲醇", "二噁烷", "石棉"]
+
+domain_keywords:
+  - 化妆品
+  - 原料
+  - 配方
+  - 成分
+  - 组分
+  - 限量
+  - 备案
+  - 注册证
+  - 眼膜
+  - 面膜
+  - 电子皮肤
+  - 促渗
+  - 检测
+  - 法规
+  - 规范
+  - 毒理
+  - 安全
+  - 功效
+  - 防腐剂
+  - 防晒剂
+  - 着色剂
+  - 染发剂
+  - 保湿
+  - 抗皱
+  - 抗氧化
+  - 重金属
+  - 铅
+  - 砷
+  - 汞
+  - 镉

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>产品知识助手 · BIOCELLINE</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --border: #e4e3de;
+    --text: #1e1e1c;
+    --muted: #6b6a64;
+    --hint: #9b9a93;
+    --accent: #a8436b;
+    --accent-soft: #fbeaf0;
+    --blue: #2f6fa8;
+    --blue-soft: #eaf2fa;
+    --warn: #9a6a13;
+    --warn-soft: #faeeda;
+    --danger: #a32d2d;
+    --danger-soft: #fcebeb;
+    --ok: #2f7a52;
+    --ok-soft: #eaf5ee;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px; line-height: 1.6;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 20px 20px 40px; }
+  header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  header h1 { font-size: 15px; font-weight: 500; margin: 0; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); display: inline-block; }
+  .meta { margin-left: auto; color: var(--hint); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+  .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .panel-head { padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .panel-body { padding: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip {
+    border: 1px solid var(--border); background: #fff; color: var(--muted);
+    border-radius: 999px; padding: 4px 10px; font-size: 12px; cursor: pointer;
+    font-family: inherit; transition: background .15s, border-color .15s;
+  }
+  .chip:hover { background: var(--accent-soft); border-color: #eec6d6; color: var(--accent); }
+  .log { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; min-height: 80px; }
+  .msg { display: flex; flex-direction: column; gap: 4px; }
+  .msg .role { font-size: 11px; color: var(--hint); }
+  .bubble { border-radius: 10px; padding: 10px 12px; white-space: pre-wrap; word-break: break-word; }
+  .msg.user .bubble { background: var(--blue-soft); border: 1px solid #d5e4f2; }
+  .msg.bot .bubble { background: #fbfbfa; border: 1px solid var(--border); }
+  .msg.bot.human .bubble { border-color: #eec6d6; background: var(--accent-soft); }
+  form { display: flex; gap: 8px; }
+  textarea {
+    flex: 1; resize: none; border: 1px solid var(--border); border-radius: 10px;
+    padding: 9px 11px; font: inherit; color: inherit; background: #fff; min-height: 42px;
+  }
+  textarea:focus { outline: 2px solid #eec6d6; outline-offset: 0; border-color: #eec6d6; }
+  button.send {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 10px; padding: 0 16px; font: inherit; cursor: pointer;
+  }
+  button.send:disabled { opacity: .5; cursor: not-allowed; }
+  .kv { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+  .kv:last-child { border-bottom: none; }
+  .kv span:first-child { color: var(--muted); }
+  .kv span:last-child { font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+  .badge { display: inline-block; border-radius: 6px; padding: 1px 7px; font-size: 11px; border: 1px solid transparent; }
+  .badge.ok { background: var(--ok-soft); color: var(--ok); border-color: #cfe6d8; }
+  .badge.warn { background: var(--warn-soft); color: var(--warn); border-color: #efd9ab; }
+  .badge.danger { background: var(--danger-soft); color: var(--danger); border-color: #f2c9c9; }
+  .badge.info { background: var(--blue-soft); color: var(--blue); border-color: #d5e4f2; }
+  .cite { border-top: 1px solid var(--border); padding: 9px 0; font-size: 12px; }
+  .cite:first-of-type { border-top: none; }
+  .cite .src { color: var(--muted); display: flex; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+  .cite .txt { color: #4a4a45; }
+  .empty { color: var(--hint); font-size: 12px; }
+  .bar { height: 4px; background: #eeede9; border-radius: 999px; overflow: hidden; margin-top: 4px; }
+  .bar > i { display: block; height: 100%; background: var(--ok); }
+  .err { color: var(--danger); font-size: 12px; margin-top: 8px; }
+  .traj { margin-top: 10px; }
+  .traj-step { border-left: 2px solid var(--blue); padding: 2px 0 6px 9px; margin-left: 3px; font-size: 12px; }
+  .traj-step .tname { font-family: ui-monospace, Consolas, monospace; color: var(--blue); }
+  .traj-step .targs { color: var(--muted); font-size: 11px; }
+  .traj-step .tres { color: var(--hint); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .traj-step.bad { border-left-color: var(--danger); }
+  .traj-step.bad .tname { color: var(--danger); }
+  .formula-card { border: 1px solid #d5e4f2; border-radius: 10px; background: #fbfdff; overflow: hidden; margin-top: 4px; }
+  .formula-head { display: flex; align-items: center; gap: 8px; padding: 8px 11px; background: var(--blue-soft); border-bottom: 1px solid #d5e4f2; }
+  .formula-title { font-weight: 500; color: var(--blue); }
+  .formula-brief { padding: 7px 11px; color: var(--muted); font-size: 12px; }
+  .formula-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .formula-table th { text-align: left; padding: 6px 11px; color: var(--muted); background: #f7f9fb; border-bottom: 1px solid var(--border); font-weight: 500; }
+  .formula-table td { padding: 6px 11px; border-bottom: 1px solid #eef0f2; vertical-align: top; }
+  .formula-table tr:last-child td { border-bottom: none; }
+  .formula-table .pct { font-family: ui-monospace, Consolas, monospace; color: var(--accent); white-space: nowrap; }
+  .formula-table .note { color: var(--hint); font-size: 11px; }
+  .formula-notes { padding: 8px 11px; border-top: 1px solid var(--border); background: var(--warn-soft); color: var(--warn); font-size: 12px; }
+  .formula-disclaimer { padding: 8px 11px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px; line-height: 1.5; }
+  /* ---- 访客栏 / 历史抽屉 ---- */
+  .visitor-bar { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); background: var(--ok-soft); border: 1px solid #cfe6d8; border-radius: 999px; padding: 3px 6px 3px 10px; }
+  .visitor-bar b { font-variant-numeric: tabular-nums; color: var(--ok); font-weight: 600; }
+  .vdot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); display: inline-block; }
+  .hbtn { border: 1px solid var(--border); background: #fff; color: var(--muted); border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; }
+  .hbtn:hover { background: var(--accent-soft); border-color: #eec6d6; color: var(--accent); }
+  .hbtn.xs { padding: 1px 7px; font-size: 11px; border-radius: 6px; }
+  .mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.28); z-index: 20; }
+  .mask.on { display: block; }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 92vw); background: var(--surface); border-left: 1px solid var(--border); z-index: 21; transform: translateX(105%); transition: transform .22s ease; display: flex; flex-direction: column; box-shadow: -8px 0 30px rgba(0,0,0,.06); }
+  .drawer.on { transform: translateX(0); }
+  .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid var(--border); }
+  .drawer-head h3 { margin: 0; font-size: 14px; font-weight: 500; }
+  .drawer-head .stat { font-size: 11px; color: var(--hint); font-weight: 400; margin-left: 6px; }
+  .hist-list { flex: 1; overflow: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .hist-item { border: 1px solid var(--border); border-radius: 9px; padding: 9px 10px; background: #fff; }
+  .hist-item.active { border-color: #eec6d6; background: var(--accent-soft); }
+  .hist-item .hi-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .hist-item .hi-title { font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .hist-item .hi-meta { font-size: 11px; color: var(--hint); margin-top: 3px; display: flex; gap: 8px; }
+  .hist-item .hi-actions { display: flex; gap: 4px; }
+  .hi-open, .hi-del { border: 1px solid var(--border); background: #fff; color: var(--muted); border-radius: 6px; padding: 1px 7px; font-size: 11px; cursor: pointer; font-family: inherit; }
+  .hi-del { color: var(--danger); border-color: #f2c9c9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="dot"></span>
+    <h1>产品知识助手 · 配方研制 / 原料 / 法规</h1>
+    <span class="badge info" id="status">Mock 模型 · 本地联调</span>
+    <span class="visitor-bar" id="visitorBar" title="你的对话与配方草案只对你可见">
+      <span class="vdot"></span>我的空间 <b id="visitorShort">…</b>
+      <button class="hbtn xs" id="switchVisitor" type="button" title="换一个独立空间（原空间数据仍保留）">换身份</button>
+    </span>
+    <button class="hbtn" id="openHistory" type="button">📋 历史记录</button>
+    <button class="hbtn" id="newSession" type="button" title="清空当前对话，重新开始">＋ 新会话</button>
+    <span class="meta" id="meta"></span>
+  </header>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head">客户问题 · AI 生成回复草稿</div>
+      <div class="panel-body">
+        <div class="chips" id="chips"></div>
+        <div class="log" id="log"></div>
+        <form id="form">
+          <textarea id="input" placeholder="输入客户的问题，回车发送（Shift+回车换行）"></textarea>
+          <button class="send" id="send" type="submit">生成</button>
+        </form>
+        <div class="err" id="err"></div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-head">依据与合规</div>
+      <div class="panel-body">
+        <div id="summary"><div class="empty">还没有提问记录</div></div>
+        <div id="traj"></div>
+        <div id="cites" style="margin-top:10px"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer" aria-label="历史记录">
+  <div class="drawer-head">
+    <h3>历史记录 <span class="stat" id="histStat"></span></h3>
+    <button class="hbtn xs" id="closeDrawer" type="button">关闭</button>
+  </div>
+  <div class="hist-list" id="histList"><div class="empty">加载中…</div></div>
+</aside>
+
+<script>
+const SAMPLES = [
+  "帮我研制一个抗皱保湿眼霜配方",
+  "开发一款舒缓敏感肌的精华液配方",
+  "设计一个清爽控油的洁面配方",
+  "甘油有什么危害，毒理数据怎么说",
+  "透明质酸钠的 CAS 号是多少",
+  "化妆品中铅的限量是多少",
+  "这个眼膜的成分表是什么",
+  "这个眼膜能治疗痤疮吗"
+];
+
+const INTENT_LABEL = {
+  material_info: "原料信息", regulation: "法规条款", technology: "技术资料",
+  order_query: "订单查询", formulation: "配方研制", other: "其他"
+};
+
+const escHtml = (s) => String(s == null ? "" : s)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+
+const $ = (id) => document.getElementById(id);
+const logEl = $("log"), inputEl = $("input"), sendEl = $("send");
+
+// ---- 访客身份与会话（每人独立空间）----
+const VISITOR_KEY = "cosmetic_agent_visitor_id";
+let VISITOR_ID = null;
+try { VISITOR_ID = localStorage.getItem(VISITOR_KEY); } catch (e) {}
+if (!VISITOR_ID) {
+  VISITOR_ID = "v-" + ((globalThis.crypto && crypto.randomUUID)
+    ? crypto.randomUUID().replace(/-/g, "")
+    : (Date.now().toString(16) + Math.random().toString(16).slice(2)).slice(0, 24));
+  try { localStorage.setItem(VISITOR_KEY, VISITOR_ID); } catch (e) {}
+}
+const newSessionId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+let SESSION_ID = newSessionId();
+let PINNED = false;  // 载入历史卡后，后续追问仍带该 session_id
+
+const api = (path, opt) => {
+  opt = opt || {};
+  const headers = Object.assign({}, opt.headers || {}, { "X-Visitor-Id": VISITOR_ID });
+  return fetch(path, Object.assign({}, opt, { headers }));
+};
+
+function renderVisitorBadge() {
+  const el = $("visitorShort");
+  if (el) el.textContent = VISITOR_ID.replace(/^v-/, "").slice(0, 8);
+}
+
+$("chips").innerHTML = SAMPLES.map(s => `<button class="chip" type="button">${s}</button>`).join("");
+$("chips").addEventListener("click", (e) => {
+  if (e.target.classList.contains("chip")) { inputEl.value = e.target.textContent; inputEl.focus(); }
+});
+
+inputEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("form").requestSubmit(); }
+});
+
+function append(role, text, needsHuman) {
+  const div = document.createElement("div");
+  div.className = "msg " + role + (needsHuman ? " human" : "");
+  div.innerHTML = `<div class="role">${role === "user" ? "客户" : "AI 草稿"}</div><div class="bubble"></div>`;
+  div.querySelector(".bubble").textContent = text;
+  logEl.appendChild(div);
+  div.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function renderFormula(f) {
+  if (!f || !f.items || !f.items.length) return;
+  const rows = f.items.map(it => `
+    <tr>
+      <td>${escHtml(it.category)}</td>
+      <td>${escHtml(it.name)}</td>
+      <td class="pct">${Number(it.pct).toFixed(2)}%</td>
+      <td>${escHtml(it.role)}${it.note ? `<div class="note">${escHtml(it.note)}</div>` : ""}</td>
+    </tr>`).join("");
+  const risks = (f.risk_notes || []).length
+    ? `<div class="formula-notes"><b>风险提示</b><br>${f.risk_notes.map(escHtml).join("<br>")}</div>`
+    : "";
+  const box = document.createElement("div");
+  box.innerHTML = `
+    <div class="formula-card">
+      <div class="formula-head">
+        <span class="formula-title">配方草案 · ${escHtml(f.product_label)}</span>
+        <span class="badge info">引擎计算 · 合计 ${Number(f.total).toFixed(2)}%</span>
+      </div>
+      ${f.brief ? `<div class="formula-brief">需求：${escHtml(f.brief)}</div>` : ""}
+      <table class="formula-table">
+        <thead><tr><th>类别</th><th>原料</th><th>用量</th><th>作用 / 备注</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      ${risks}
+      <div class="formula-disclaimer">${escHtml(f.disclaimer)}</div>
+    </div>`;
+  logEl.appendChild(box.firstElementChild);
+}
+
+function renderSummary(data, ms) {
+  const isFormula = !!data.formula;
+  const pct = isFormula ? 100 : Math.round((data.confidence || 0) * 100);
+  const level = pct >= 45 ? "ok" : pct >= 30 ? "warn" : "danger";
+  const humanBadge = data.needs_human
+    ? '<span class="badge warn">建议转人工</span>'
+    : '<span class="badge ok">可直接使用</span>';
+  const flags = (data.guard_flags || []).length
+    ? data.guard_flags.map(f => `<span class="badge ${f.includes("block") ? "danger" : "warn"}">${f}</span>`).join(" ")
+    : '<span class="badge ok">无违规命中</span>';
+
+  $("summary").innerHTML = `
+    <div class="kv"><span>意图</span><span>${INTENT_LABEL[data.intent] || data.intent}</span></div>
+    <div class="kv"><span>${isFormula ? "计算校验" : "置信度"}</span><span>${isFormula ? "合计闭合" : pct + "%"}</span></div>
+    <div class="bar"><i style="width:${pct}%;background:var(--${level === "ok" ? "ok" : level === "warn" ? "warn" : "danger"})"></i></div>
+    <div class="kv" style="margin-top:8px"><span>结论</span><span>${humanBadge}</span></div>
+    <div class="kv"><span>合规</span><span>${flags}</span></div>
+    <div class="kv"><span>耗时</span><span>${ms} ms</span></div>
+    <div class="kv"><span>trace</span><span>${data.trace_id}</span></div>`;
+
+  const cites = data.citations || [];
+  $("cites").innerHTML = cites.length
+    ? '<div class="panel-head" style="padding:8px 0;border:none">检索依据</div>' + cites.map(c => `
+        <div class="cite">
+          <div class="src"><span>${c.title}${c.section ? " · " + c.section : ""}</span><span>${c.score.toFixed(2)}</span></div>
+          <div class="hint" style="font-size:11px;color:var(--hint);margin-bottom:2px">${c.source}</div>
+          <div class="txt">${c.snippet.replace(/\n/g, " ")}</div>
+        </div>`).join("")
+    : '<div class="empty">本次未使用知识库（订单工具或未检索到依据）</div>';
+
+  const traj = data.trajectory || [];
+  $("traj").innerHTML = traj.length
+    ? '<div class="traj"><div class="panel-head" style="padding:8px 0;border:none">Agent 工具轨迹</div>' +
+      traj.map((t, i) => {
+        const args = Object.entries(t.arguments || {}).map(([k, v]) => `${k}=${v}`).join(", ");
+        return `<div class="traj-step ${t.ok ? "" : "bad"}">
+          <div><span class="tname">${i + 1}. ${t.tool}</span> <span class="targs">(${args})</span></div>
+          <div class="tres" title="${(t.result_summary || "").replace(/"/g, "&quot;")}">${t.result_summary || ""}</div>
+        </div>`;
+      }).join("") + '</div>'
+    : "";
+}
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const message = inputEl.value.trim();
+  if (!message) return;
+  $("err").textContent = "";
+  append("user", message);
+  inputEl.value = "";
+  sendEl.disabled = true;
+  const started = performance.now();
+
+  try {
+    const resp = await api("/api/v1/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, channel: "seat_console", session_id: SESSION_ID })
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data?.error?.message || `HTTP ${resp.status}`);
+    const ms = Math.round(performance.now() - started);
+    append("bot", data.answer, data.needs_human);
+    renderFormula(data.formula);
+    renderSummary(data, ms);
+    $("meta").textContent = `trace ${data.trace_id} · ${ms}ms`;
+    loadHistory(true);  // 静默刷新历史
+  } catch (ex) {
+    $("err").textContent = "请求失败：" + ex.message;
+    append("bot", "服务异常，请稍后重试或转人工。", true);
+  } finally {
+    sendEl.disabled = false;
+    inputEl.focus();
+  }
+});
+
+// ---- 历史抽屉 ----
+function openDrawer() { $("drawer").classList.add("on"); $("mask").classList.add("on"); loadHistory(); }
+function closeDrawer() { $("drawer").classList.remove("on"); $("mask").classList.remove("on"); }
+
+async function loadHistory(silent) {
+  try {
+    const r = await api("/api/v1/history?limit=50");
+    const d = await r.json();
+    renderHistory(d.sessions || [], d.stats || {});
+  } catch (e) {
+    if (!silent) $("histList").innerHTML = '<div class="empty">读取历史失败，请检查服务是否在运行</div>';
+  }
+}
+
+function renderHistory(sessions, stats) {
+  $("histStat").textContent = stats.sessions ? `· ${stats.sessions} 段 / ${stats.turns} 轮` : "";
+  if (!sessions.length) {
+    $("histList").innerHTML = '<div class="empty">还没有历史记录<br>提问后会自动保存在你的空间里</div>';
+    return;
+  }
+  $("histList").innerHTML = sessions.map(s => {
+    const cur = !PINNED && s.session_id === SESSION_ID ? " active" : "";
+    const when = new Date(s.updated_at * 1000).toLocaleString("zh-CN", { hour12: false });
+    return `<div class="hist-item${cur}" data-id="${escHtml(s.session_id)}">
+      <div class="hi-top">
+        <span class="hi-title" title="${escHtml(s.title)}">${escHtml(s.title) || "（空）"}</span>
+        <span class="hi-actions">
+          <button class="hi-open" data-open="${escHtml(s.session_id)}" type="button">载入</button>
+          <button class="hi-del" data-del="${escHtml(s.session_id)}" type="button" title="删除这段对话">✕</button>
+        </span>
+      </div>
+      <div class="hi-meta"><span>${escHtml(when)}</span><span>${s.turns} 轮</span>${s.has_formula ? '<span>含配方</span>' : ""}</div>
+    </div>`;
+  }).join("");
+}
+
+async function openSession(sid) {
+  try {
+    const r = await api("/api/v1/history/" + encodeURIComponent(sid));
+    const d = await r.json();
+    logEl.innerHTML = "";
+    (d.turns || []).forEach(t => {
+      append("user", t.question || "", false);
+      append("bot", t.answer || "", t.needs_human);
+      if (t.formula) renderFormula(t.formula);
+    });
+    SESSION_ID = sid;
+    PINNED = true;
+    $("err").textContent = "";
+    closeDrawer();
+    loadHistory(true);
+  } catch (e) {
+    $("err").textContent = "载入历史失败：" + e.message;
+  }
+}
+
+$("openHistory").addEventListener("click", openDrawer);
+$("closeDrawer").addEventListener("click", closeDrawer);
+$("mask").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+$("histList").addEventListener("click", async (e) => {
+  const del = e.target.closest("[data-del]");
+  if (del) {
+    const id = del.getAttribute("data-del");
+    if (!confirm("删除这段对话记录？不可恢复。")) return;
+    try {
+      await api("/api/v1/history/" + encodeURIComponent(id), { method: "DELETE" });
+      if (SESSION_ID === id) { SESSION_ID = newSessionId(); PINNED = false; logEl.innerHTML = ""; }
+      loadHistory();
+    } catch (ex) { $("err").textContent = "删除失败：" + ex.message; }
+    return;
+  }
+  const open = e.target.closest("[data-open]");
+  if (open) openSession(open.getAttribute("data-open"));
+});
+
+// ---- 新会话 / 换身份 ----
+$("newSession").addEventListener("click", () => {
+  SESSION_ID = newSessionId();
+  PINNED = false;
+  logEl.innerHTML = "";
+  $("summary").innerHTML = '<div class="empty">还没有提问记录</div>';
+  $("traj").innerHTML = "";
+  $("cites").innerHTML = "";
+  $("err").textContent = "";
+  inputEl.focus();
+  loadHistory(true);
+});
+
+$("switchVisitor").addEventListener("click", () => {
+  if (!confirm("换一个新身份？当前空间的数据仍保留在服务端，但新身份看不到。")) return;
+  VISITOR_ID = "v-" + ((globalThis.crypto && crypto.randomUUID)
+    ? crypto.randomUUID().replace(/-/g, "")
+    : (Date.now().toString(16) + Math.random().toString(16).slice(2)).slice(0, 24));
+  try { localStorage.setItem(VISITOR_KEY, VISITOR_ID); } catch (e) {}
+  location.reload();
+});
+
+fetch("/api/v1/kb/status").then(r => r.json()).then(d => {
+  if (d.mode === "agent") {
+    $("status").textContent = `Agent 模式 · ${d.llm_model} · ${d.chunks} 条`;
+    $("status").className = "badge warn";
+  } else {
+    $("status").textContent = `RAG 离线模式 · ${d.chunks} 条`;
+    $("status").className = "badge info";
+  }
+}).catch(() => { $("status").textContent = "后端未连接"; });
+
+renderVisitorBadge();
+loadHistory(true);
+</script>
+</body>
+</html>

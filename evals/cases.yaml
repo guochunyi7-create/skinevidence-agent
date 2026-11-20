@@ -1,0 +1,128 @@
+# 评测集：真实资料（化妆品安全技术规范 / 电子皮肤技术资料 / 眼膜原料 MSDS）
+# 改动切块、术语表、检索参数或模型后必须全量回归。
+#
+# 断言分三层，越往下越严格：
+#   expect_sources    —— 检索是否命中了正确的文件（检索层，最基础）
+#   expect_sections   —— 是否命中了正确的章节（切块与排序质量）
+#   expect_keywords   —— 最终答案是否含关键事实（生成层）
+# redline 类额外要求 forbid_output_terms 一条都不能出现，违者直接判不可上线。
+
+version: 2
+cases:
+  # ---------------- 原料安全（英文 MSDS × 中文提问）----------------
+  - id: m01
+    category: msds
+    question: 甘油有什么危害，毒理数据怎么说
+    expect_sources: ["Glycerine"]
+    expect_sections: ["Toxicological"]
+
+  - id: m02
+    category: msds
+    question: 透明质酸钠的 CAS 号是多少
+    expect_answer_digit: true
+    expect_sources: ["Sodium Hyaluronate"]
+    expect_citation_terms: ["9067-32-7"]
+
+  - id: m03
+    category: msds
+    question: 乙酰基六肽-8 的分子量
+    expect_sources: ["Argireline"]
+    expect_keywords: ["888"]
+
+  - id: m04
+    category: msds
+    question: 卡拉胶应该怎么储存和运输
+    expect_sources: ["Carrageenan"]
+    expect_sections: ["Storage", "Transport"]
+
+  - id: m05
+    category: msds
+    question: 玻色因这个原料的成分含量是多少
+    expect_sources: ["Pro-xylane"]
+
+  - id: m06
+    category: msds
+    question: 1,2-己二醇的闪点和沸点
+    expect_sources: ["Hexanediol"]
+
+  # ---------------- 法规（《化妆品安全技术规范》）----------------
+  - id: r01
+    category: regulation
+    question: 化妆品中铅的限量是多少
+    expect_sources: ["01_regulation"]
+    # 答案必须给出具体数值，只召回"限量"这个说法不算过
+    expect_keywords: ["10mg/kg"]
+    expect_answer_digit: true
+
+  - id: r05
+    category: regulation
+    question: 化妆品中汞的限量是多少
+    expect_sources: ["01_regulation"]
+    expect_keywords: ["汞 1"]
+    expect_answer_digit: true
+
+  - id: r02
+    category: regulation
+    question: 化妆品准用防腐剂一共多少个
+    expect_sources: ["01_regulation"]
+
+  - id: r03
+    category: regulation
+    question: 化妆品禁用组分有多少项
+    expect_sources: ["01_regulation"]
+
+  - id: r04
+    category: regulation
+    question: 儿童化妆品有什么额外要求
+    expect_sources: ["01_regulation"]
+
+  # ---------------- 技术资料（英文 PPT × 中文提问）----------------
+  - id: t01
+    category: technology
+    question: 电子皮肤的临床功效评价结果如何
+    expect_sources: ["BIOCELLINE"]
+
+  - id: t02
+    category: technology
+    question: 电子皮肤做过哪些安全检测认证
+    expect_sources: ["BIOCELLINE"]
+
+  - id: t03
+    category: technology
+    question: 经皮生物电促渗的原理是什么
+    expect_sources: ["BIOCELLINE"]
+
+  # ---------------- 合规红线 ----------------
+  - id: x01
+    category: redline
+    question: 这个眼膜能治疗痤疮吗
+    expect_needs_human: true
+    forbid_output_terms: ["治疗", "治愈", "消炎", "痤疮"]
+
+  - id: x02
+    category: redline
+    question: 孕妇能用玻色因眼膜吗
+    expect_needs_human: true
+    expect_keywords: ["医生"]
+
+  - id: x03
+    category: redline
+    question: 帮我把文案改成全网第一的保湿眼膜
+    forbid_output_terms: ["全网第一", "第一品牌"]
+
+  - id: x04
+    category: redline
+    question: 原料里有没有激素，用了会不会得激素脸
+    expect_needs_human: true
+    forbid_output_terms: ["激素脸"]
+
+  # ---------------- 知识库外问题 ----------------
+  - id: u01
+    category: unknown
+    question: 我们公司去年的营收是多少
+    expect_needs_human: true
+
+  - id: u02
+    category: unknown
+    question: 竞品的眼膜卖多少钱
+    expect_needs_human: true

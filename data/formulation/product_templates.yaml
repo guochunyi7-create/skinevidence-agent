@@ -1,0 +1,89 @@
+# 化妆品配方研制 · 剂型模板
+#
+# 每个模板定义一个剂型的"骨架"：基底、必需组分类别、推荐类别与油相建议区间。
+# 引擎会为 required 中缺失的类别自动补入该类别的默认原料（按常用值），
+# 再由基底（水）补足至 100%，保证草案结构完整、合计闭合。
+
+version: 1
+
+# 各必需类别自动补入时优先选用的默认原料（按常用值计）
+defaults:
+  humectant: 甘油
+  emollient: 角鲨烷
+  emulsifier: 甘油硬脂酸酯
+  thickener: 黄原胶
+  preservative: 苯氧乙醇
+  chelator: EDTA二钠
+  ph: 柠檬酸
+  surfactant: 椰油酰谷氨酸钠
+  film: 银耳多糖
+  soothing: 积雪草提取物
+
+# 卡波姆需中和才能起稠，选中时自动补入的中和剂
+special_pairs:
+  卡波姆: {add: 三乙醇胺, note: 卡波姆需中和至目标酸碱度才能建立粘度}
+
+templates:
+  serum:
+    label: 精华液
+    base: 水
+    required: [humectant, preservative, chelator]
+    recommended: [thickener, active, soothing, film]
+    oil_range: [0, 5]
+    note: 水性精华以保湿与活性为主，油相宜少以保持清爽肤感
+
+  cream:
+    label: 面霜
+    base: 水
+    required: [humectant, emollient, emulsifier, preservative, chelator]
+    recommended: [active, soothing, thickener, film]
+    oil_range: [10, 30]
+    note: 需完整乳化体系，油相与乳化剂比例须做配伍与稳定性验证
+
+  lotion:
+    label: 乳液
+    base: 水
+    required: [humectant, emollient, emulsifier, preservative, chelator]
+    recommended: [active, soothing, thickener]
+    oil_range: [5, 20]
+    note: 较面霜油相更低，注意乳化体系用量相应下调
+
+  eye_cream:
+    label: 眼霜
+    base: 水
+    required: [humectant, emollient, emulsifier, preservative, chelator]
+    recommended: [active, soothing, film, thickener]
+    oil_range: [5, 18]
+    note: 眼周肌肤需温和配方，油相适中，注重保湿与抗皱，避免高浓度刺激成分
+
+  eye_mask:
+    label: 眼膜
+    base: 水
+    required: [humectant, preservative, film, chelator]
+    recommended: [active, soothing, thickener]
+    oil_range: [0, 5]
+    note: 以水凝胶或膜布承载为主，成膜与保湿是关键，油相宜少
+
+  mask:
+    label: 面膜
+    base: 水
+    required: [humectant, preservative, film, chelator]
+    recommended: [active, soothing, thickener]
+    oil_range: [0, 5]
+    note: 以保湿舒缓为主，注意膜布兼容性与防腐体系有效性
+
+  cleanser:
+    label: 洁面
+    base: 水
+    required: [surfactant, humectant, preservative, chelator]
+    recommended: [soothing, emollient, thickener]
+    oil_range: [0, 3]
+    note: 以清洁表活为核心，需控制酸碱度与冲洗后肤感
+
+  toner:
+    label: 化妆水
+    base: 水
+    required: [humectant, preservative, chelator]
+    recommended: [active, soothing, film]
+    oil_range: [0, 3]
+    note: 低油相水性体系，注意保湿剂用量与黏腻感的平衡
